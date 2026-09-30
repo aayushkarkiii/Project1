@@ -3,441 +3,937 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Booking • Rs 1,000</title>
+  <title>Positivus • Event & Dining Reservations</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0c10;
-      --card: #13141a;
-      --card-hover: #181a22;
-      --input: #0f1015;
-      --border: #232530;
-      --border-focus: #4f46e5;
-      --accent: #4f46e5;
-      --accent-hover: #4338ca;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --text-dim: #6b7280;
-      --success: #10b981;
-      --radius: 10px;
+      --positivus-green: #B9FF66;
+      --positivus-black: #191A23;
+      --positivus-dark: #292A32;
+      --positivus-gray: #F3F3F3;
+      --positivus-white: #FFFFFF;
+      --positivus-border: #191A23;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-card: 36px;
+      --radius-btn: 14px;
+      --shadow-neubrutalism: 0px 5px 0px #191A23;
+      --shadow-neubrutalism-sm: 0px 3px 0px #191A23;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem 1rem;
+      background-color: var(--positivus-white);
+      color: var(--positivus-black);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    .wrapper {
+    .container {
       width: 100%;
-      max-width: 540px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
     }
 
-    /* Minimal Top Navigation */
-    .top-nav {
+    /* =========================================
+       Navigation Bar
+       ========================================= */
+    nav {
+      padding: 1.75rem 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.5rem;
     }
 
-    .brand {
-      font-size: 0.85rem;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--positivus-black);
+      text-decoration: none;
+      letter-spacing: -0.03em;
     }
 
-    .nav-link {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #818cf8;
-      text-decoration: none;
-      background: rgba(99, 102, 241, 0.1);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      padding: 5px 12px;
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--positivus-black);
       border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--positivus-green);
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--positivus-black);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: #555;
+    }
+
+    .btn-nav {
+      border: 1px solid var(--positivus-border);
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-btn);
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--positivus-black) !important;
+      transition: all 0.2s ease;
+      background: transparent;
+    }
+
+    .btn-nav:hover {
+      background: var(--positivus-black);
+      color: var(--positivus-white) !important;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* =========================================
+       Hero Section
+       ========================================= */
+    .hero {
+      padding: 3rem 0 4rem;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 2rem 0;
+      }
+      .hero-illustration {
+        order: -1;
+        max-width: 380px;
+        margin: 0 auto;
+      }
+    }
+
+    .hero-content h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      color: var(--positivus-black);
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      color: #4b5563;
+      margin-bottom: 2rem;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--positivus-black);
+      color: var(--positivus-white);
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1rem 2.2rem;
+      border-radius: var(--radius-btn);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--positivus-black);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--positivus-green);
+      color: var(--positivus-black);
+      box-shadow: var(--shadow-neubrutalism-sm);
+    }
+
+    .btn-secondary {
+      background: var(--positivus-gray);
+      color: var(--positivus-black);
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 1rem 1.8rem;
+      border-radius: var(--radius-btn);
+      text-decoration: none;
+      border: 1px solid var(--positivus-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       transition: all 0.2s;
     }
 
-    .nav-link:hover {
-      background: rgba(99, 102, 241, 0.2);
+    .btn-secondary:hover {
+      background: var(--positivus-green);
+      box-shadow: var(--shadow-neubrutalism-sm);
     }
 
-    /* Header */
-    header {
+    /* Vector Hero Illustration in Positivus Style */
+    .hero-illustration {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .illustration-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--positivus-gray);
+      border: 1px solid var(--positivus-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-neubrutalism);
+      padding: 2.2rem;
+      position: relative;
+    }
+
+    .ill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1.5rem;
     }
 
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.35rem;
-    }
-
-    .subtitle {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-    }
-
-    /* Card */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.45rem;
-    }
-
-    /* Minimal Event Option Buttons */
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 1.25rem;
-    }
-
-    @media (max-width: 480px) {
-      .options-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .option-btn {
-      background: var(--input);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .option-btn:hover {
-      border-color: var(--text-dim);
-      background: var(--card-hover);
-    }
-
-    .option-btn.active {
-      border-color: var(--accent);
-      background: rgba(79, 70, 229, 0.12);
-    }
-
-    .opt-name {
-      font-size: 0.88rem;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .opt-price {
-      font-size: 0.78rem;
-      color: #818cf8;
-      font-weight: 600;
-    }
-
-    /* Inputs */
-    input, textarea {
-      width: 100%;
-      background: var(--input);
-      border: 1px solid var(--border);
+    .ill-badge {
+      background: var(--positivus-green);
+      padding: 4px 12px;
       border-radius: 6px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.92rem;
-      padding: 0.65rem 0.85rem;
-      outline: none;
-      transition: border-color 0.15s;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 1px solid var(--positivus-border);
     }
 
-    input:focus, textarea:focus {
-      border-color: var(--border-focus);
+    .ill-rate {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: var(--text-dim);
+    .ill-item {
+      background: #ffffff;
+      border: 1px solid var(--positivus-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.95rem;
     }
 
-    .grid-2 {
+    .ill-check {
+      background: var(--positivus-green);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--positivus-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    /* =========================================
+       Section Header Component (Positivus Tag)
+       ========================================= */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin: 4rem 0 3rem;
+      flex-wrap: wrap;
+    }
+
+    .badge-tag {
+      background: var(--positivus-green);
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      padding: 2px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--positivus-border);
+      display: inline-block;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: #4b5563;
+      max-width: 580px;
+    }
+
+    /* =========================================
+       Experiences Cards Grid (Positivus Soft-Brutalism)
+       ========================================= */
+    .cards-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 5rem;
     }
 
-    @media (max-width: 480px) {
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
+    .p-card {
+      border: 1px solid var(--positivus-border);
+      border-radius: var(--radius-card);
+      padding: 2.5rem;
+      box-shadow: var(--shadow-neubrutalism);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 280px;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    /* Counter */
-    .counter {
+    .p-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0px 8px 0px #191A23;
+    }
+
+    /* Card Themes */
+    .card-gray {
+      background: var(--positivus-gray);
+      color: var(--positivus-black);
+    }
+
+    .card-green {
+      background: var(--positivus-green);
+      color: var(--positivus-black);
+    }
+
+    .card-black {
+      background: var(--positivus-black);
+      color: var(--positivus-white);
+    }
+
+    .card-title-pill {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .pill-green { background: var(--positivus-green); color: var(--positivus-black); }
+    .pill-white { background: var(--positivus-white); color: var(--positivus-black); }
+
+    .card-price-tag {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .card-desc {
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .card-action {
       display: flex;
       align-items: center;
       gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    .btn-qty {
-      width: 34px;
-      height: 34px;
-      background: var(--input);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-size: 1.1rem;
+    .card-gray .card-action, .card-green .card-action {
+      color: var(--positivus-black);
+    }
+
+    .card-black .card-action {
+      color: var(--positivus-white);
+    }
+
+    .circle-arrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      border: 1px solid var(--positivus-border);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .card-gray .circle-arrow, .card-green .circle-arrow {
+      background: var(--positivus-black);
+      color: var(--positivus-green);
+    }
+
+    .card-black .circle-arrow {
+      background: var(--positivus-white);
+      color: var(--positivus-black);
+    }
+
+    .p-card:hover .circle-arrow {
+      transform: rotate(45deg);
+    }
+
+    /* =========================================
+       Booking Form (Positivus Contact Card)
+       ========================================= */
+    .booking-section {
+      background: var(--positivus-gray);
+      border: 1px solid var(--positivus-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-neubrutalism);
+      padding: 3.5rem;
+      margin-bottom: 5rem;
+    }
+
+    @media (max-width: 640px) {
+      .booking-section { padding: 1.75rem; border-radius: 24px; }
+    }
+
+    .form-radio-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .radio-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .radio-pill input[type="radio"] {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--positivus-black);
+      border-radius: 50%;
+      outline: none;
+      display: grid;
+      place-content: center;
+      cursor: pointer;
+      background: #ffffff;
+    }
+
+    .radio-pill input[type="radio"]::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.15s ease-in-out;
+      background: var(--positivus-green);
+      border: 1px solid var(--positivus-black);
+    }
+
+    .radio-pill input[type="radio"]:checked::before {
+      transform: scale(1);
+    }
+
+    .p-form {
+      max-width: 620px;
+    }
+
+    .p-field {
+      margin-bottom: 1.5rem;
+    }
+
+    .p-label {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--positivus-black);
+    }
+
+    .p-input, .p-textarea {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--positivus-border);
+      border-radius: var(--radius-btn);
+      padding: 1rem 1.25rem;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--positivus-black);
+      outline: none;
+      transition: box-shadow 0.15s;
+    }
+
+    .p-input:focus, .p-textarea:focus {
+      box-shadow: 0 0 0 2px var(--positivus-green);
+    }
+
+    .p-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 540px) {
+      .p-grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Quantity Counter */
+    .qty-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #ffffff;
+      border: 1px solid var(--positivus-border);
+      border-radius: var(--radius-btn);
+      padding: 6px 14px;
+      width: fit-content;
+    }
+
+    .btn-step {
+      width: 32px;
+      height: 32px;
+      background: var(--positivus-gray);
+      border: 1px solid var(--positivus-border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .btn-qty:hover {
-      background: var(--card-hover);
+    .btn-step:hover {
+      background: var(--positivus-green);
     }
 
-    .qty-num {
-      font-size: 1rem;
-      font-weight: 600;
+    .qty-display {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
       min-width: 24px;
       text-align: center;
     }
 
-    .total-badge {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-left: auto;
-    }
-
-    .total-badge strong {
-      color: var(--text);
-    }
-
-    /* Submit Button */
-    .btn-submit {
-      width: 100%;
-      margin-top: 1rem;
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
+    .p-total-tag {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      background: var(--positivus-green);
+      padding: 4px 12px;
       border-radius: 6px;
-      padding: 0.85rem;
-      font-size: 0.95rem;
+      border: 1px solid var(--positivus-border);
+      margin-left: 10px;
+    }
+
+    .btn-submit-booking {
+      width: 100%;
+      background: var(--positivus-black);
+      color: var(--positivus-white);
+      font-family: var(--font-display);
+      font-size: 1.15rem;
       font-weight: 600;
-      font-family: inherit;
+      padding: 1.15rem;
+      border-radius: var(--radius-btn);
+      border: 1px solid var(--positivus-black);
       cursor: pointer;
-      transition: background 0.15s;
+      transition: all 0.2s ease;
+      margin-top: 1rem;
     }
 
-    .btn-submit:hover:not(:disabled) {
-      background: var(--accent-hover);
+    .btn-submit-booking:hover:not(:disabled) {
+      background: var(--positivus-green);
+      color: var(--positivus-black);
+      box-shadow: var(--shadow-neubrutalism-sm);
     }
 
-    .btn-submit:disabled {
+    .btn-submit-booking:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
 
-    /* Minimal Confirmation Modal */
-    .modal-overlay {
+    /* =========================================
+       Positivus Footer
+       ========================================= */
+    footer {
+      background: var(--positivus-black);
+      color: var(--positivus-white);
+      border-radius: var(--radius-card) var(--radius-card) 0 0;
+      padding: 4rem 2rem 2.5rem;
+      margin-top: 4rem;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 2.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--positivus-white);
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--positivus-white);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: var(--positivus-green);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* =========================================
+       Minimal Modal
+       ========================================= */
+    .modal-backdrop {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      z-index: 100;
+      padding: 1.5rem;
+      z-index: 1000;
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-backdrop.show { display: flex; }
 
-    .modal-box {
-      background: #14151b;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+    .positivus-modal {
+      background: #ffffff;
+      border: 2px solid var(--positivus-border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-neubrutalism);
+      padding: 2.5rem;
+      max-width: 440px;
       width: 100%;
-      max-width: 400px;
-      padding: 1.75rem;
       text-align: center;
     }
 
-    .icon-ok {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--success);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      margin: 0 auto 1rem;
-    }
-
-    .modal-code {
-      font-family: monospace;
-      font-size: 1.15rem;
+    .modal-tag {
+      background: var(--positivus-green);
+      border: 1px solid var(--positivus-border);
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-family: var(--font-display);
       font-weight: 700;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 6px 12px;
-      border-radius: 6px;
+      font-size: 1.1rem;
       display: inline-block;
-      margin: 0.75rem 0 1rem;
-      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
     }
 
-    .modal-summary {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1.25rem;
-      line-height: 1.5;
+    .modal-id {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
     }
 
-    .btn-dismiss {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.7rem;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-dismiss:hover {
-      background: rgba(255, 255, 255, 0.12);
+    .modal-text {
+      color: #4b5563;
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="wrapper">
-    <!-- Top Nav -->
-    <div class="top-nav">
-      <span class="brand">Booking Portal</span>
-      <a href="/spreadsheet" class="nav-link">📊 Spreadsheet</a>
+  <div class="container">
+    <!-- Navbar -->
+    <nav>
+      <a href="#" class="logo">
+        <div class="logo-icon">✦</div>
+        Positivus
+      </a>
+      <div class="nav-links">
+        <a href="#services">Experiences</a>
+        <a href="#booking">Book Pass</a>
+        <a href="/spreadsheet">Spreadsheet</a>
+        <a href="#booking" class="btn-nav">Book a Ticket</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Exceptional Dining & Event Experiences</h1>
+        <p>Book your pass for Full Dinner, Fine Dining, or Premium Bar Services. Seamless reservation at a flat rate of Rs 1,000 per person — instantly updated to the live spreadsheet.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn-primary">Book a Ticket</a>
+          <a href="/spreadsheet" class="btn-secondary">📊 View Spreadsheet</a>
+        </div>
+      </div>
+
+      <!-- Vector Illustration in Positivus Style -->
+      <div class="hero-illustration">
+        <div class="illustration-card">
+          <div class="ill-header">
+            <span class="ill-badge">ALL ACCESS</span>
+            <span class="ill-rate">Rs 1,000</span>
+          </div>
+          <div class="ill-item">
+            <span>🍽️ Full Dinner Experience</span>
+            <div class="ill-check">✓</div>
+          </div>
+          <div class="ill-item">
+            <span>🍷 Fine Dining Gala</span>
+            <div class="ill-check">✓</div>
+          </div>
+          <div class="ill-item">
+            <span>🍸 Premium Bar Services</span>
+            <div class="ill-check">✓</div>
+          </div>
+          <div style="font-size: 0.8rem; color: #6b7280; text-align: center; margin-top: 12px;">
+            ✦ Real-time sync with Google & Excel Spreadsheets
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Header -->
+    <div class="section-header" id="services">
+      <span class="badge-tag">Services</span>
+      <p class="section-desc">Choose from our curated culinary and cocktail experiences. Flat rate of Rs 1,000 per ticket across all options.</p>
     </div>
 
-    <!-- Header -->
-    <header>
-      <h1>Reserve Experience</h1>
-      <p class="subtitle">Flat rate <strong>Rs 1,000</strong> per ticket. Recorded directly into spreadsheet.</p>
-    </header>
+    <!-- Positivus Soft-Brutalism Cards Grid -->
+    <div class="cards-grid">
+      <!-- Card 1: Full Dinner (Gray Theme) -->
+      <div class="p-card card-gray">
+        <div>
+          <span class="card-title-pill pill-green">Full Dinner</span>
+          <div class="card-price-tag">Rs 1,000 / person</div>
+          <p class="card-desc">Gourmet buffet and plated evening dinner with seasonal entrees, fresh artisanal salads, and dessert table.</p>
+        </div>
+        <div class="card-action" onclick="selectAndScroll('Full Dinner')">
+          <div class="circle-arrow">↗</div>
+          <span>Select Experience</span>
+        </div>
+      </div>
 
-    <!-- Card Form -->
-    <div class="card">
-      <form id="bookingForm" onsubmit="submitForm(event)">
+      <!-- Card 2: Fine Dining (Green Theme) -->
+      <div class="p-card card-green">
+        <div>
+          <span class="card-title-pill pill-white">Fine Dining</span>
+          <div class="card-price-tag">Rs 1,000 / person</div>
+          <p class="card-desc">Exclusive multi-course chef’s tasting gala, sommelier wine pairing, and skyline terrace seating.</p>
+        </div>
+        <div class="card-action" onclick="selectAndScroll('Fine Dining')">
+          <div class="circle-arrow">↗</div>
+          <span>Select Experience</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Bar Services (Black Theme) -->
+      <div class="p-card card-black">
+        <div>
+          <span class="card-title-pill pill-white">Bar Services</span>
+          <div class="card-price-tag">Rs 1,000 / person</div>
+          <p class="card-desc">Craft cocktails, mixology lounge access, and open bar pass with top-shelf spirits and signature drinks.</p>
+        </div>
+        <div class="card-action" onclick="selectAndScroll('Bar Services')">
+          <div class="circle-arrow">↗</div>
+          <span>Select Experience</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Form Section (Positivus Contact Form Style) -->
+    <div class="section-header" id="booking">
+      <span class="badge-tag">Reservation</span>
+      <p class="section-desc">Fill in attendee details below to secure your passes. All entries are instantly logged into the spreadsheet.</p>
+    </div>
+
+    <div class="booking-section">
+      <form id="bookingForm" onsubmit="handleBooking(event)" class="p-form">
         
-        <!-- Service Selector -->
-        <div class="form-group">
-          <label>Select Option (Rs 1,000 each)</label>
-          <div class="options-grid">
-            <div class="option-btn active" onclick="pickOption('Full Dinner', this)">
-              <span class="opt-name">Full Dinner</span>
-              <span class="opt-price">Rs 1,000</span>
-            </div>
-            <div class="option-btn" onclick="pickOption('Fine Dining', this)">
-              <span class="opt-name">Fine Dining</span>
-              <span class="opt-price">Rs 1,000</span>
-            </div>
-            <div class="option-btn" onclick="pickOption('Bar Services', this)">
-              <span class="opt-name">Bar Services</span>
-              <span class="opt-price">Rs 1,000</span>
-            </div>
-          </div>
-          <input type="hidden" id="eventSelection" value="Full Dinner">
+        <!-- Experience Radios -->
+        <div class="form-radio-group">
+          <label class="radio-pill">
+            <input type="radio" name="experienceRadio" value="Full Dinner" checked onchange="updateRadioSelection(this.value)">
+            <span>Full Dinner</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="experienceRadio" value="Fine Dining" onchange="updateRadioSelection(this.value)">
+            <span>Fine Dining</span>
+          </label>
+          <label class="radio-pill">
+            <input type="radio" name="experienceRadio" value="Bar Services" onchange="updateRadioSelection(this.value)">
+            <span>Bar Services</span>
+          </label>
         </div>
 
         <!-- Name -->
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" placeholder="Jane Doe" required minlength="2">
+        <div class="p-field">
+          <label class="p-label" for="fullName">Full Name *</label>
+          <input type="text" class="p-input" id="fullName" placeholder="Jane Doe" required minlength="2">
         </div>
 
         <!-- Email & Phone -->
-        <div class="grid-2">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="jane@example.com" required>
+        <div class="p-grid-2">
+          <div class="p-field">
+            <label class="p-label" for="email">Email Address *</label>
+            <input type="email" class="p-input" id="email" placeholder="jane@example.com" required>
           </div>
-          <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" placeholder="+977 9800000000">
+          <div class="p-field">
+            <label class="p-label" for="phone">Phone Number</label>
+            <input type="tel" class="p-input" id="phone" placeholder="+977 9800000000">
           </div>
         </div>
 
         <!-- Quantity & Total -->
-        <div class="form-group">
-          <label>Quantity</label>
-          <div class="counter">
-            <button type="button" class="btn-qty" onclick="changeQty(-1)">−</button>
-            <span class="qty-num" id="qtyText">1</span>
-            <button type="button" class="btn-qty" onclick="changeQty(1)">+</button>
-            <div class="total-badge">Total: <strong id="totalText">Rs 1,000</strong></div>
+        <div class="p-field">
+          <label class="p-label">Number of Tickets (Rs 1,000 each)</label>
+          <div style="display: flex; align-items: center;">
+            <div class="qty-box">
+              <button type="button" class="btn-step" onclick="changeQty(-1)">−</button>
+              <span class="qty-display" id="qtyText">1</span>
+              <button type="button" class="btn-step" onclick="changeQty(1)">+</button>
+            </div>
+            <div class="p-total-tag" id="totalTag">Total: Rs 1,000</div>
           </div>
           <input type="hidden" id="ticketCount" value="1">
         </div>
 
-        <!-- Note -->
-        <div class="form-group">
-          <label for="notes">Notes (Optional)</label>
-          <textarea id="notes" rows="2" placeholder="Any dietary preferences or remarks..."></textarea>
+        <!-- Notes -->
+        <div class="p-field">
+          <label class="p-label" for="notes">Special Requirements / Notes</label>
+          <textarea class="p-textarea" id="notes" rows="2" placeholder="Dietary restrictions, allergies, or table requests..."></textarea>
         </div>
 
-        <!-- Submit -->
-        <button type="submit" class="btn-submit" id="submitBtn">Confirm Booking • Rs 1,000</button>
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit-booking" id="submitBtn">
+          Confirm Reservation • Rs 1,000
+        </button>
       </form>
     </div>
-  </div>
 
-  <!-- Minimal Modal -->
-  <div class="modal-overlay" id="confirmModal">
-    <div class="modal-box">
-      <div class="icon-ok">✓</div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 4px;">Booking Confirmed</h3>
-      <div class="modal-code" id="modalBookingId">BK-000000</div>
-      <p class="modal-summary" id="modalSummary">Your registration is confirmed and saved directly to the spreadsheet.</p>
-      <button class="btn-dismiss" onclick="closeModal()">Done</button>
+  </div> <!-- /container -->
+
+  <!-- Positivus Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <a href="#" class="footer-logo">
+          <div class="logo-icon" style="background: var(--positivus-green); color: var(--positivus-black);">✦</div>
+          Positivus Events
+        </a>
+        <div class="footer-links">
+          <a href="#services">Experiences</a>
+          <a href="#booking">Reservation</a>
+          <a href="/spreadsheet">Spreadsheet</a>
+          <a href="/api/spreadsheet/download">Download Excel (.xlsx)</a>
+          <a href="/api/spreadsheet/csv">Download CSV</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Positivus Events. Flat rate Rs 1,000 per pass.</span>
+        <span>Connected to Live Spreadsheets</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Confirmation Modal in Positivus Style -->
+  <div class="modal-backdrop" id="confirmModal">
+    <div class="positivus-modal">
+      <div class="modal-tag">✓ RESERVED</div>
+      <div class="modal-id" id="modalBookingId">BK-000000</div>
+      <p class="modal-text" id="modalText">Your reservation has been confirmed and logged directly into the spreadsheet.</p>
+      <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal()">Done</button>
     </div>
   </div>
 
   <script>
     let qty = 1;
     const PRICE_PER_TICKET = 1000;
+    let selectedExperience = 'Full Dinner';
 
-    function pickOption(name, elem) {
-      document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
-      elem.classList.add('active');
-      document.getElementById('eventSelection').value = name;
+    function selectAndScroll(exp) {
+      selectedExperience = exp;
+      const radios = document.getElementsByName('experienceRadio');
+      for (let r of radios) {
+        if (r.value === exp) r.checked = true;
+      }
+      document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateRadioSelection(val) {
+      selectedExperience = val;
     }
 
     function changeQty(delta) {
@@ -446,21 +942,21 @@
       document.getElementById('ticketCount').value = qty;
       
       const total = qty * PRICE_PER_TICKET;
-      const formattedTotal = 'Rs ' + total.toLocaleString();
-      document.getElementById('totalText').textContent = formattedTotal;
-      document.getElementById('submitBtn').textContent = 'Confirm Booking • ' + formattedTotal;
+      const formatted = 'Total: Rs ' + total.toLocaleString();
+      document.getElementById('totalTag').textContent = formatted;
+      document.getElementById('submitBtn').textContent = 'Confirm Reservation • Rs ' + total.toLocaleString();
     }
 
-    async function submitForm(e) {
+    async function handleBooking(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
-      const originalText = submitBtn.textContent;
+      const origText = submitBtn.textContent;
 
       const payload = {
         full_name: document.getElementById('fullName').value.trim(),
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
-        event_name: document.getElementById('eventSelection').value,
+        event_name: selectedExperience,
         ticket_tier: "Rs 1,000",
         ticket_count: qty,
         notes: document.getElementById('notes').value.trim()
@@ -468,7 +964,7 @@
 
       try {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Saving...';
+        submitBtn.textContent = 'Recording Reservation...';
 
         const res = await fetch('/api/bookings', {
           method: 'POST',
@@ -478,33 +974,33 @@
 
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(err.detail || 'Booking failed');
+          throw new Error(err.detail || 'Failed to submit reservation');
         }
 
         const data = await res.json();
-        
         document.getElementById('modalBookingId').textContent = data.booking_id;
-        document.getElementById('modalSummary').textContent = `${data.booking.full_name} • ${data.booking.event_name} (${data.booking.ticket_count}x) — Saved directly to the spreadsheet.`;
-        document.getElementById('confirmModal').classList.add('open');
+        document.getElementById('modalText').textContent = `${data.booking.full_name} • ${data.booking.event_name} (${data.booking.ticket_count} tickets) has been logged directly into the spreadsheet.`;
+        document.getElementById('confirmModal').classList.add('show');
 
         // Reset
         document.getElementById('bookingForm').reset();
         qty = 1;
         document.getElementById('qtyText').textContent = 1;
         document.getElementById('ticketCount').value = 1;
-        document.getElementById('totalText').textContent = 'Rs 1,000';
-        document.getElementById('submitBtn').textContent = 'Confirm Booking • Rs 1,000';
+        document.getElementById('totalTag').textContent = 'Total: Rs 1,000';
+        submitBtn.textContent = 'Confirm Reservation • Rs 1,000';
+        selectAndScroll('Full Dinner');
 
       } catch (err) {
-        alert('Error: ' + err.message);
+        alert('Booking error: ' + err.message);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
+        submitBtn.textContent = origText;
       }
     }
 
     function closeModal() {
-      document.getElementById('confirmModal').classList.remove('open');
+      document.getElementById('confirmModal').classList.remove('show');
     }
   </script>
 </body>
