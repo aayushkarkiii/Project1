@@ -27,43 +27,31 @@ app.add_middleware(
 # Initialize Google Sheets Manager
 sheets_manager = GoogleSheetsManager()
 
-# List of events / hospitality dining options
+# Simplified events list with flat Rs 1,000 pricing
 AVAILABLE_EVENTS = [
     {
         "id": "full-dinner",
-        "name": "Full Dinner Experience",
-        "date": "Available Daily (6:00 PM - 10:00 PM)",
-        "location": "Grand Banquet Hall",
-        "badge": "Popular",
-        "tiers": [
-            {"name": "Standard 3-Course Buffet", "price": "$45 / person"},
-            {"name": "Deluxe Plated Dinner", "price": "$65 / person"},
-            {"name": "Family Style Feast", "price": "$55 / person"}
-        ]
+        "name": "Full Dinner",
+        "price": 1000,
+        "price_display": "Rs 1,000",
+        "subtitle": "Buffet & plated dinner service",
+        "tiers": [{"name": "Standard Pass", "price": "Rs 1,000"}]
     },
     {
         "id": "fine-dining",
-        "name": "Fine Dining Gala",
-        "date": "Evenings (7:00 PM - 11:00 PM)",
-        "location": "The Skyline Terrace",
-        "badge": "Exclusive",
-        "tiers": [
-            {"name": "Chef's Tasting Menu (5-Course)", "price": "$95 / person"},
-            {"name": "Sommelier Wine Pairing Edition", "price": "$135 / person"},
-            {"name": "VIP Private Dining Suite", "price": "$175 / person"}
-        ]
+        "name": "Fine Dining",
+        "price": 1000,
+        "price_display": "Rs 1,000",
+        "subtitle": "Chef's gourmet multi-course experience",
+        "tiers": [{"name": "Standard Pass", "price": "Rs 1,000"}]
     },
     {
         "id": "bar-services",
-        "name": "Premium Bar Services",
-        "date": "Nightly (8:00 PM - Late)",
-        "location": "The Mixology Lounge & Patio",
-        "badge": "Trending",
-        "tiers": [
-            {"name": "Standard Open Bar Pass", "price": "$40 / person"},
-            {"name": "Craft Cocktail & Mixology Experience", "price": "$60 / person"},
-            {"name": "Top-Shelf Spirits & Champagne Pass", "price": "$85 / person"}
-        ]
+        "name": "Bar Services",
+        "price": 1000,
+        "price_display": "Rs 1,000",
+        "subtitle": "Cocktails & premium beverage access",
+        "tiers": [{"name": "Standard Pass", "price": "Rs 1,000"}]
     }
 ]
 
