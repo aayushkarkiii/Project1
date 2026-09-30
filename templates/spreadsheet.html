@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Bookings - Spreadsheet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sheets-green: #0f9d58;
+      --sheets-green-hover: #0b8043;
+      --sheets-bg: #f8f9fa;
+      --sheets-grid: #e0e0e0;
+      --sheets-header: #f1f3f4;
+      --sheets-text: #202124;
+      --sheets-selection: #1a73e8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      background: var(--sheets-bg);
+      color: var(--sheets-text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Google Sheets Style App Bar */
+    .sheets-app-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #dadce0;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .doc-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sheets-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--sheets-green);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 4px rgba(15, 157, 88, 0.3);
+    }
+
+    .doc-title-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #202124;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-subtitle {
+      font-size: 0.78rem;
+      color: #5f6368;
+    }
+
+    .sheets-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action {
+      background: #ffffff;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-action:hover {
+      background: #f1f3f4;
+      border-color: #c0c4c9;
+    }
+
+    .btn-primary {
+      background: var(--sheets-green);
+      border-color: var(--sheets-green);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--sheets-green-hover);
+    }
+
+    /* Formula & Filter Bar */
+    .formula-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #dadce0;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .cell-name-box {
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      background: #f1f3f4;
+      padding: 3px 10px;
+      border-radius: 4px;
+      border: 1px solid #dadce0;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .fx-symbol {
+      color: #5f6368;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .formula-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.88rem;
+      color: #202124;
+      background: transparent;
+    }
+
+    .search-filter {
+      padding: 4px 10px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      outline: none;
+      width: 200px;
+    }
+
+    /* Spreadsheet Table Viewport */
+    .table-container {
+      flex: 1;
+      overflow: auto;
+      background: #ffffff;
+    }
+
+    table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: max-content;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      border: 1px solid var(--sheets-grid);
+      padding: 6px 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Row 1: Column Letters A, B, C... */
+    .col-letter-header {
+      background: var(--sheets-header);
+      color: #5f6368;
+      font-weight: 600;
+      text-align: center;
+      user-select: none;
+      font-size: 0.75rem;
+      height: 24px;
+    }
+
+    /* Row 2: Field Names */
+    .field-name-header {
+      background: #e8f0fe;
+      color: #1967d2;
+      font-weight: 700;
+      text-align: center;
+      height: 32px;
+      user-select: none;
+    }
+
+    /* Left row numbers 1, 2, 3... */
+    .row-num {
+      background: var(--sheets-header);
+      color: #5f6368;
+      font-weight: 600;
+      text-align: center;
+      user-select: none;
+      width: 44px;
+      min-width: 44px;
+      font-size: 0.75rem;
+    }
+
+    /* Cells */
+    td.sheet-cell {
+      height: 28px;
+      cursor: cell;
+      background: #ffffff;
+    }
+
+    td.sheet-cell:hover {
+      background: #f8fafd;
+    }
+
+    td.sheet-cell.selected {
+      outline: 2px solid var(--sheets-selection);
+      outline-offset: -2px;
+      background: #e8f0fe !important;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: #e6f4ea;
+      color: #137333;
+    }
+
+    /* Bottom Sheet Tab Bar */
+    .sheets-bottom-bar {
+      background: #f1f3f4;
+      border-top: 1px solid #dadce0;
+      padding: 4px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #5f6368;
+    }
+
+    .sheet-tab {
+      background: #ffffff;
+      padding: 6px 18px;
+      border-radius: 4px 4px 0 0;
+      border: 1px solid #dadce0;
+      border-bottom: none;
+      font-weight: 700;
+      color: var(--sheets-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <div class="sheets-app-bar">
+    <div class="doc-info">
+      <div class="sheets-logo">田</div>
+      <div class="doc-title-area">
+        <div class="doc-title">
+          Event Bookings Spreadsheet
+          <span style="font-size: 0.75rem; color: #137333; font-weight: 600; background: #e6f4ea; padding: 2px 8px; border-radius: 4px;">Live Auto-Save</span>
+        </div>
+        <div class="doc-subtitle" id="lastSavedTime">Synchronized with local Excel (.xlsx) and CSV records</div>
+      </div>
+    </div>
+
+    <div class="sheets-actions">
+      <a href="/" class="btn-action">🎟️ Open Booking Form</a>
+      <a href="/api/spreadsheet/download" class="btn-action btn-primary" download>⬇ Download .XLSX</a>
+      <a href="/api/spreadsheet/csv" class="btn-action" download>⬇ Download .CSV</a>
+      <button class="btn-action" onclick="fetchData()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <!-- Formula & Search Bar -->
+  <div class="formula-bar">
+    <div class="cell-name-box" id="activeCellLabel">A1</div>
+    <div class="fx-symbol">fx</div>
+    <input type="text" class="formula-input" id="formulaInput" readonly placeholder="Select any cell to inspect its value">
+    <input type="text" class="search-filter" id="searchFilter" oninput="filterRows()" placeholder="🔍 Filter rows...">
+  </div>
+
+  <!-- Spreadsheet Grid -->
+  <div class="table-container">
+    <table id="sheetTable">
+      <thead id="sheetThead">
+        <!-- Injected via JavaScript -->
+      </thead>
+      <tbody id="sheetTbody">
+        <!-- Injected via JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Bottom Sheet Tab Bar -->
+  <div class="sheets-bottom-bar">
+    <div class="sheet-tab">
+      <span>📄</span> Sheet 1 (Bookings)
+    </div>
+    <div id="rowCountDisplay">Total Rows: 0</div>
+  </div>
+
+  <script>
+    const COL_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+    let sheetHeaders = [];
+    let sheetRows = [];
+    let selectedCell = null;
+
+    async function fetchData() {
+      try {
+        const res = await fetch('/api/spreadsheet/data');
+        const data = await res.json();
+        sheetHeaders = data.headers || [];
+        sheetRows = data.rows || [];
+        renderTable();
+        document.getElementById('lastSavedTime').textContent = `Last updated: ${new Date().toLocaleTimeString()} • ${sheetRows.length} total entries`;
+        document.getElementById('rowCountDisplay').textContent = `Total Bookings: ${sheetRows.length}`;
+      } catch (err) {
+        console.error("Error loading spreadsheet data:", err);
+      }
+    }
+
+    function renderTable() {
+      const thead = document.getElementById('sheetThead');
+      const tbody = document.getElementById('sheetTbody');
+
+      // 1. Column letters row (A, B, C...)
+      let letterRow = `<tr><th class="row-num"></th>`;
+      sheetHeaders.forEach((h, i) => {
+        const colWidth = i === 1 ? '160px' : (i === 8 ? '220px' : '140px');
+        letterRow += `<th class="col-letter-header" style="width: ${colWidth};">${COL_LETTERS[i] || ''}</th>`;
+      });
+      letterRow += `</tr>`;
+
+      // 2. Field names row
+      let fieldRow = `<tr><th class="row-num">1</th>`;
+      sheetHeaders.forEach((h) => {
+        fieldRow += `<th class="field-name-header">${h}</th>`;
+      });
+      fieldRow += `</tr>`;
+
+      thead.innerHTML = letterRow + fieldRow;
+
+      // 3. Data rows
+      tbody.innerHTML = '';
+      if (sheetRows.length === 0) {
+        let emptyRow = `<tr><td class="row-num">2</td><td colspan="${sheetHeaders.length}" style="text-align: center; color: #80868b; padding: 24px;">No bookings recorded yet. Fill out the booking form to see rows append in real-time!</td></tr>`;
+        tbody.innerHTML = emptyRow;
+        return;
+      }
+
+      sheetRows.forEach((r, rowIdx) => {
+        const rowNumber = rowIdx + 2;
+        let tr = document.createElement('tr');
+        tr.dataset.row = rowNumber;
+        
+        let rowHtml = `<td class="row-num">${rowNumber}</td>`;
+        sheetHeaders.forEach((header, colIdx) => {
+          const val = r[header] !== undefined ? r[header] : '';
+          const colLetter = COL_LETTERS[colIdx] || '';
+          const cellId = `${colLetter}${rowNumber}`;
+          
+          let displayVal = val;
+          if (header === 'Status') {
+            displayVal = `<span class="badge-status">${val}</span>`;
+          } else if (header === 'Booking ID') {
+            displayVal = `<strong>${val}</strong>`;
+          }
+
+          rowHtml += `<td class="sheet-cell" data-cell="${cellId}" data-val="${String(val).replace(/"/g, '&quot;')}" onclick="selectCell(this, '${cellId}', '${String(val).replace(/'/g, "\\'")}')">${displayVal}</td>`;
+        });
+        tr.innerHTML = rowHtml;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function selectCell(elem, cellId, value) {
+      if (selectedCell) {
+        selectedCell.classList.remove('selected');
+      }
+      selectedCell = elem;
+      selectedCell.classList.add('selected');
+      document.getElementById('activeCellLabel').textContent = cellId;
+      document.getElementById('formulaInput').value = value;
+    }
+
+    function filterRows() {
+      const q = document.getElementById('searchFilter').value.toLowerCase();
+      const rows = document.querySelectorAll('#sheetTbody tr');
+      rows.forEach(tr => {
+        const text = tr.innerText.toLowerCase();
+        tr.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    // Auto-refresh every 5 seconds to catch live bookings
+    setInterval(fetchData, 5000);
+    window.addEventListener('DOMContentLoaded', fetchData);
+  </script>
+</body>
+</html>

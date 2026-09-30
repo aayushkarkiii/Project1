@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Booking App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.75);
+      --bg-card-hover: rgba(28, 36, 56, 0.85);
+      --bg-input: rgba(13, 17, 28, 0.7);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: #6366f1;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+      --accent-secondary: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.25);
+      --warning: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background gradient meshes */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #818cf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.85rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+      box-shadow: 0 0 8px var(--warning);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.active {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* Status Banner */
+    .status-banner {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      font-size: 0.88rem;
+    }
+
+    .status-banner span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-sheet-link {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-sheet-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main Card */
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Event Selector Grid */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .event-card {
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .event-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .event-card.selected {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .event-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      color: #a5b4fc;
+    }
+
+    .event-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      padding-right: 40px;
+      line-height: 1.3;
+    }
+
+    .event-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* Form Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    /* Counter controls */
+    .counter-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
+      width: fit-content;
+    }
+
+    .btn-counter {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .btn-counter:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .counter-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px var(--accent-glow);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 1rem;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
+    }
+
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .ticket-card {
+      background: #0f1626;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 440px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent-glow);
+      animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .icon-check {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--success-glow);
+      border: 2px solid var(--success);
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .ticket-booking-id {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #a5b4fc;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px dashed rgba(99, 102, 241, 0.4);
+      padding: 6px 14px;
+      border-radius: 8px;
+      margin: 0.75rem 0 1.25rem;
+    }
+
+    .ticket-details {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      text-align: left;
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .ticket-row strong {
+      color: var(--text-main);
+    }
+
+    .btn-close-modal {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-close-modal:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Admin Drawer Toggle */
+    .admin-bar {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .btn-admin {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-dim);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-admin:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    .recent-bookings-table {
+      margin-top: 1rem;
+      display: none;
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .recent-bookings-table.show {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+
+  <div class="container">
+    <header>
+      <div class="badge-pill">
+        <span class="status-dot" id="headerStatusDot"></span>
+        <span id="headerStatusText">Checking Google Sheets...</span>
+      </div>
+      <h1>Reserve Your Event Pass</h1>
+      <p class="subtitle">Complete the form below. Confirmed registrations are instantly listed in your connected Google Spreadsheet.</p>
+    </header>
+
+    <!-- Google Sheet Status Banner -->
+    <div class="status-banner" id="statusBanner">
+      <span id="statusBannerMsg">Connecting backend...</span>
+      <div style="display: flex; gap: 8px;">
+        <a href="/spreadsheet" class="btn-sheet-link" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); color: #34d399; font-weight: 700;">📊 Open Spreadsheet</a>
+        <button class="btn-sheet-link" id="checkStatusBtn" onclick="checkBackendStatus()">Refresh</button>
+      </div>
+    </div>
+
+    <!-- Booking Form Card -->
+    <div class="card">
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+        
+        <!-- Step 1: Select Event -->
+        <div class="section-title">
+          <span class="section-num">1</span> Select an Event
+        </div>
+        
+        <div class="events-grid" id="eventsGrid">
+          <!-- Dynamic event cards injected here -->
+        </div>
+        <input type="hidden" id="selectedEventName" required>
+
+        <!-- Step 2: Attendee & Ticket Info -->
+        <div class="section-title">
+          <span class="section-num">2</span> Attendee Details
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input type="text" id="fullName" placeholder="Jane Doe" required minlength="2">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Work or Personal Email *</label>
+            <input type="email" id="email" placeholder="jane@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
+          </div>
+
+          <div class="form-group">
+            <label for="ticketTier">Ticket Tier *</label>
+            <select id="ticketTier">
+              <option value="General Admission">General Admission</option>
+              <option value="VIP All-Access">VIP All-Access</option>
+              <option value="Student / Virtual">Student / Virtual</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Number of Tickets</label>
+            <div class="counter-wrapper">
+              <button type="button" class="btn-counter" onclick="adjustTickets(-1)">−</button>
+              <span class="counter-val" id="ticketCountDisplay">1</span>
+              <button type="button" class="btn-counter" onclick="adjustTickets(1)">+</button>
+            </div>
+            <input type="hidden" id="ticketCount" value="1">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="notes">Special Requirements / Notes (Optional)</label>
+            <textarea id="notes" rows="2" placeholder="Dietary restrictions, accessibility requests, or group details..."></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span class="spinner" id="btnSpinner"></span>
+          <span id="btnText">Confirm & Book Now</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Admin / Recent List Toggle -->
+    <div class="admin-bar">
+      <button class="btn-admin" onclick="toggleRecentBookings()">📋 View Recent Submissions (Audit Log)</button>
+      <div class="recent-bookings-table" id="recentTable">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Time</th>
+              <th>Name</th>
+              <th>Event</th>
+              <th>Tier</th>
+              <th>Tickets</th>
+            </tr>
+          </thead>
+          <tbody id="recentTableBody">
+            <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No bookings logged yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticket Confirmation Modal -->
+  <div class="modal-backdrop" id="confirmationModal">
+    <div class="ticket-card">
+      <div class="icon-check">✓</div>
+      <h2 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 4px;">Booking Confirmed!</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem;">Your registration has been logged and confirmed.</p>
+      
+      <div class="ticket-booking-id" id="modalBookingId">BK-000000</div>
+
+      <div class="ticket-details">
+        <div class="ticket-row"><span>Attendee:</span> <strong id="modalName">Jane Doe</strong></div>
+        <div class="ticket-row"><span>Email:</span> <strong id="modalEmail">jane@example.com</strong></div>
+        <div class="ticket-row"><span>Event:</span> <strong id="modalEvent">Tech Summit</strong></div>
+        <div class="ticket-row"><span>Tier & Qty:</span> <strong id="modalTierQty">General (1x)</strong></div>
+        <div class="ticket-row"><span>Sync Status:</span> <strong id="modalDestination" style="color: var(--success);">Google Sheets</strong></div>
+      </div>
+
+      <button class="btn-close-modal" onclick="closeModal()">Book Another Ticket</button>
+    </div>
+  </div>
+
+  <script>
+    let eventsData = [];
+    let currentTicketCount = 1;
+
+    // Load available events on startup
+    async function loadEvents() {
+      try {
+        const res = await fetch('/api/events');
+        const data = await res.json();
+        eventsData = data.events || [];
+        renderEvents();
+      } catch (err) {
+        console.error("Error loading events:", err);
+      }
+    }
+
+    function renderEvents() {
+      const grid = document.getElementById('eventsGrid');
+      grid.innerHTML = '';
+      
+      eventsData.forEach((evt, idx) => {
+        const isSelected = idx === 0;
+        const card = document.createElement('div');
+        card.className = `event-card ${isSelected ? 'selected' : ''}`;
+        card.onclick = () => selectEvent(evt, card);
+        card.innerHTML = `
+          <span class="event-tag">${evt.badge}</span>
+          <div class="event-title">${evt.name}</div>
+          <div class="event-meta">
+            <span>📅 ${evt.date}</span>
+            <span>📍 ${evt.location}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+
+        if (isSelected) {
+          document.getElementById('selectedEventName').value = evt.name;
+          updateTierDropdown(evt);
+        }
+      });
+    }
+
+    function selectEvent(evt, cardElem) {
+      document.querySelectorAll('.event-card').forEach(c => c.classList.remove('selected'));
+      cardElem.classList.add('selected');
+      document.getElementById('selectedEventName').value = evt.name;
+      updateTierDropdown(evt);
+    }
+
+    function updateTierDropdown(evt) {
+      const select = document.getElementById('ticketTier');
+      select.innerHTML = '';
+      if (evt.tiers && evt.tiers.length > 0) {
+        evt.tiers.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.textContent = `${t.name} (${t.price})`;
+          select.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = 'General Admission';
+        opt.textContent = 'General Admission';
+        select.appendChild(opt);
+      }
+    }
+
+    function adjustTickets(delta) {
+      currentTicketCount = Math.max(1, Math.min(10, currentTicketCount + delta));
+      document.getElementById('ticketCountDisplay').textContent = currentTicketCount;
+      document.getElementById('ticketCount').value = currentTicketCount;
+    }
+
+    // Backend & Google Sheets status checker
+    async function checkBackendStatus() {
+      const banner = document.getElementById('statusBannerMsg');
+      const dot = document.getElementById('headerStatusDot');
+      const headerText = document.getElementById('headerStatusText');
+
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        
+        if (data.google_sheets_connected) {
+          dot.classList.add('active');
+          if (data.has_webhook) {
+            headerText.textContent = `Google Sheets Connected (Webhook)`;
+            banner.innerHTML = `🟢 <strong>Live Sync Active</strong> — Records directly append to your Google Spreadsheet via Webhook!`;
+          } else {
+            headerText.textContent = `Google Sheets Connected: ${data.spreadsheet_name}`;
+            banner.innerHTML = `🟢 <strong>Live Sync Active</strong> — Records directly append to Google Sheet: <em>${data.spreadsheet_name}</em>`;
+          }
+        } else {
+          dot.classList.remove('active');
+          headerText.textContent = 'Operating in Local Fallback Mode';
+          banner.innerHTML = `⚠️ <strong>Local Mode</strong> — Set <code>GOOGLE_SHEET_WEBHOOK_URL</code> or <code>credentials.json</code> in <code>.env</code> to stream directly into Google Sheets.`;
+        }
+      } catch (e) {
+        dot.classList.remove('active');
+        headerText.textContent = 'Offline';
+        banner.innerHTML = `❌ Backend unreachable. Ensure the FastAPI server is running.`;
+      }
+    }
+
+    // Submit booking
+    async function handleBookingSubmit(event) {
+      event.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+
+      const payload = {
+        full_name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        event_name: document.getElementById('selectedEventName').value,
+        ticket_tier: document.getElementById('ticketTier').value,
+        ticket_count: parseInt(document.getElementById('ticketCount').value, 10),
+        notes: document.getElementById('notes').value.trim()
+      };
+
+      try {
+        submitBtn.disabled = true;
+        spinner.style.display = 'inline-block';
+        btnText.textContent = 'Saving Booking...';
+
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || 'Submission failed');
+        }
+
+        const data = await res.json();
+        showModal(data);
+        document.getElementById('bookingForm').reset();
+        currentTicketCount = 1;
+        document.getElementById('ticketCountDisplay').textContent = 1;
+        document.getElementById('ticketCount').value = 1;
+        renderEvents();
+        loadRecentBookings();
+
+      } catch (err) {
+        alert('Booking error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.textContent = 'Confirm & Book Now';
+      }
+    }
+
+    function showModal(data) {
+      document.getElementById('modalBookingId').textContent = data.booking_id;
+      document.getElementById('modalName').textContent = data.booking.full_name;
+      document.getElementById('modalEmail').textContent = data.booking.email;
+      document.getElementById('modalEvent').textContent = data.booking.event_name;
+      document.getElementById('modalTierQty').textContent = `${data.booking.ticket_tier} (${data.booking.ticket_count}x)`;
+      
+      const destElem = document.getElementById('modalDestination');
+      if (data.destination === 'google_sheets') {
+        destElem.textContent = 'Synced to Google Sheet ✓';
+        destElem.style.color = 'var(--success)';
+      } else {
+        destElem.textContent = 'Logged Locally (Pending Sheet Creds)';
+        destElem.style.color = 'var(--warning)';
+      }
+
+      document.getElementById('confirmationModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('confirmationModal').classList.remove('show');
+    }
+
+    // Toggle and fetch recent bookings
+    async function toggleRecentBookings() {
+      const table = document.getElementById('recentTable');
+      table.classList.toggle('show');
+      if (table.classList.contains('show')) {
+        await loadRecentBookings();
+      }
+    }
+
+    async function loadRecentBookings() {
+      try {
+        const res = await fetch('/api/bookings');
+        const data = await res.json();
+        const tbody = document.getElementById('recentTableBody');
+        tbody.innerHTML = '';
+        
+        if (!data.bookings || data.bookings.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No bookings logged yet.</td></tr>';
+          return;
+        }
+
+        data.bookings.forEach(b => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><code>${b["Booking ID"] || b.booking_id || ''}</code></td>
+            <td>${b["Timestamp (UTC)"] || b.timestamp || ''}</td>
+            <td>${b["Full Name"] || b.full_name || ''}</td>
+            <td>${b["Event"] || b.event_name || ''}</td>
+            <td>${b["Ticket Tier"] || b.ticket_tier || ''}</td>
+            <td>${b["Tickets"] || b.ticket_count || 1}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (e) {
+        console.error("Could not fetch recent bookings:", e);
+      }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      loadEvents();
+      checkBackendStatus();
+    });
+  </script>
+</body>
+</html>
