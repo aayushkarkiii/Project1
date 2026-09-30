@@ -27,41 +27,42 @@ app.add_middleware(
 # Initialize Google Sheets Manager
 sheets_manager = GoogleSheetsManager()
 
-# Sample list of events for selection
+# List of events / hospitality dining options
 AVAILABLE_EVENTS = [
     {
-        "id": "tech-summit-2026",
-        "name": "Global Tech Summit 2026",
-        "date": "October 24, 2026",
-        "location": "Convention Center & Virtual",
+        "id": "full-dinner",
+        "name": "Full Dinner Experience",
+        "date": "Available Daily (6:00 PM - 10:00 PM)",
+        "location": "Grand Banquet Hall",
         "badge": "Popular",
         "tiers": [
-            {"name": "General Admission", "price": "$99"},
-            {"name": "VIP All-Access", "price": "$249"},
-            {"name": "Student / Virtual", "price": "$49"}
+            {"name": "Standard 3-Course Buffet", "price": "$45 / person"},
+            {"name": "Deluxe Plated Dinner", "price": "$65 / person"},
+            {"name": "Family Style Feast", "price": "$55 / person"}
         ]
     },
     {
-        "id": "ai-devcon-2026",
-        "name": "AI & Agentic Systems Developer Con",
-        "date": "November 12, 2026",
-        "location": "Innovation Hub, Hall A",
-        "badge": "Hot",
+        "id": "fine-dining",
+        "name": "Fine Dining Gala",
+        "date": "Evenings (7:00 PM - 11:00 PM)",
+        "location": "The Skyline Terrace",
+        "badge": "Exclusive",
         "tiers": [
-            {"name": "Standard Pass", "price": "$129"},
-            {"name": "Workshop Pass", "price": "$299"},
-            {"name": "Online Stream", "price": "$39"}
+            {"name": "Chef's Tasting Menu (5-Course)", "price": "$95 / person"},
+            {"name": "Sommelier Wine Pairing Edition", "price": "$135 / person"},
+            {"name": "VIP Private Dining Suite", "price": "$175 / person"}
         ]
     },
     {
-        "id": "design-craft-2026",
-        "name": "DesignCraft: UI/UX Masterclass",
-        "date": "December 05, 2026",
-        "location": "Metropolitan Arts Pavilion",
-        "badge": "Limited",
+        "id": "bar-services",
+        "name": "Premium Bar Services",
+        "date": "Nightly (8:00 PM - Late)",
+        "location": "The Mixology Lounge & Patio",
+        "badge": "Trending",
         "tiers": [
-            {"name": "Standard Seat", "price": "$79"},
-            {"name": "Front-Row Mentorship", "price": "$199"}
+            {"name": "Standard Open Bar Pass", "price": "$40 / person"},
+            {"name": "Craft Cocktail & Mixology Experience", "price": "$60 / person"},
+            {"name": "Top-Shelf Spirits & Champagne Pass", "price": "$85 / person"}
         ]
     }
 ]
